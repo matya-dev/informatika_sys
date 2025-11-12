@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Калькулятор систем счисления</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #2c3e50, #4a6572);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            color: #f5f5f5;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 1100px;
+        }
+        
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2.8rem;
+            font-weight: 300;
+            letter-spacing: 2px;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+        
+        .description {
+            text-align: center;
+            margin-bottom: 40px;
+            font-size: 1.1rem;
+            line-height: 1.6;
+            opacity: 0.9;
+        }
+        
+        .calculator {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            justify-content: center;
+            margin-bottom: 30px;
+        }
+        
+        .conversion-section {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            flex: 1;
+            min-width: 300px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .conversion-section:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+        }
+        
+        h2 {
+            margin-bottom: 25px;
+            font-size: 1.5rem;
+            font-weight: 400;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: #e0e0e0;
+        }
+        
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        label {
+            font-weight: 500;
+            color: #e0e0e0;
+            font-size: 1.1rem;
+        }
+        
+        input {
+            padding: 16px 20px;
+            background: rgba(255, 255, 255, 0.07);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            font-size: 1.1rem;
+            color: #f5f5f5;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(5px);
+        }
+        
+        input:focus {
+            outline: none;
+            border-color: rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.12);
+            box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.1);
+        }
+        
+        input::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+        
+        button {
+            background: rgba(255, 255, 255, 0.15);
+            color: white;
+            border: none;
+            padding: 16px 25px;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        button:hover {
+            background: rgba(255, 255, 255, 0.25);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .result {
+            margin-top: 25px;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 12px;
+            border-left: 4px solid rgba(255, 255, 255, 0.3);
+            font-size: 1.2rem;
+            font-weight: 500;
+            color: #f5f5f5;
+            min-height: 70px;
+            display: flex;
+            align-items: center;
+            word-break: break-all;
+            backdrop-filter: blur(5px);
+        }
+        
+        .methods-section {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .method {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            flex: 1;
+            min-width: 300px;
+        }
+        
+        .method-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+            font-size: 1.3rem;
+            color: #e0e0e0;
+        }
+        
+        .method-content {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 12px;
+            padding: 20px;
+            min-height: 200px;
+            font-family: 'Courier New', monospace;
+            line-height: 1.8;
+            white-space: pre-wrap;
+            overflow-y: auto;
+            max-height: 300px;
+        }
+        
+        .hint-section {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .hint-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+            color: #e0e0e0;
+            font-size: 1.3rem;
+        }
+        
+        .hint-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+            gap: 15px;
+        }
+        
+        .hint-item {
+            background: rgba(255, 255, 255, 0.07);
+            padding: 18px 10px;
+            border-radius: 12px;
+            text-align: center;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        
+        .hint-item:hover {
+            background: rgba(255, 255, 255, 0.12);
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .hint-value {
+            font-weight: 600;
+            font-size: 1.3rem;
+            color: #fff;
+            margin-bottom: 5px;
+        }
+        
+        .hint-binary {
+            font-size: 0.95rem;
+            color: rgba(255, 255, 255, 0.7);
+            font-family: 'Courier New', monospace;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+            
+            h1 {
+                font-size: 2.2rem;
+            }
+            
+            .conversion-section, .method {
+                min-width: 100%;
+            }
+            
+            .hint-grid {
+                grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+            }
+        }
+        
+        /* Специальные стили для предотвращения выделения текста */
+        .no-select {
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -khtml-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+        
+        /* Стили для иконок */
+        .icon {
+            font-size: 1.2em;
+        }
+        
+        .highlight {
+            color: #4fc3f7;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container no-select">
+        <h1>СИСТЕМЫ СЧИСЛЕНИЯ</h1>
+        
+        <div class="description no-select">
+            <p>Конвертер с двумя методами перевода между десятичной и двоичной системами счисления</p>
+        </div>
+        
+        <div class="calculator">
+            <div class="conversion-section">
+                <h2><i class="fas fa-calculator icon"></i> Десятичная → Двоичная</h2>
+                <div class="input-group">
+                    <label for="decimal-input">Десятичное число:</label>
+                    <input type="number" id="decimal-input" placeholder="Введите число">
+                    <button id="convert-to-binary">
+                        <i class="fas fa-exchange-alt"></i>
+                        <span>Конвертировать</span>
+                    </button>
+                </div>
+                <div class="result" id="binary-result">Результат отобразится здесь</div>
+            </div>
+            
+            <div class="conversion-section">
+                <h2><i class="fas fa-binary icon"></i> Двоичная → Десятичная</h2>
+                <div class="input-group">
+                    <label for="binary-input">Двоичное число:</label>
+                    <input type="text" id="binary-input" placeholder="Только 0 и 1">
+                    <button id="convert-to-decimal">
+                        <i class="fas fa-exchange-alt"></i>
+                        <span>Конвертировать</span>
+                    </button>
+                </div>
+                <div class="result" id="decimal-result">Результат отобразится здесь</div>
+            </div>
+        </div>
+        
+        <div class="methods-section">
+            <div class="method">
+                <div class="method-title">
+                    <i class="fas fa-long-arrow-alt-down icon"></i>
+                    <h3>Метод деления (сверху вниз)</h3>
+                </div>
+                <div class="method-content" id="division-method">
+                    Процесс деления отобразится здесь
+                </div>
+            </div>
+            
+            <div class="method">
+                <div class="method-title">
+                    <i class="fas fa-long-arrow-alt-up icon"></i>
+                    <h3>Метод степеней (снизу вверх)</h3>
+                </div>
+                <div class="method-content" id="powers-method">
+                    Процесс вычисления отобразится здесь
+                </div>
+            </div>
+        </div>
+        
+        <div class="hint-section">
+            <div class="hint-title">
+                <i class="fas fa-lightbulb icon"></i>
+                <h3>Степени двойки</h3>
+            </div>
+            <div class="hint-grid" id="hint-grid">
+                <!-- Подсказки будут добавлены через JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Функция для преобразования десятичного числа в двоичное (метод деления)
+        function decimalToBinaryDivision(decimal) {
+            if (decimal === 0) return { binary: '0', steps: '0 : 2 = 0 (ост. 0)' };
+            
+            let steps = '';
+            let num = Math.abs(decimal);
+            let binary = '';
+            
+            while (num > 0) {
+                const remainder = num % 2;
+                binary = remainder + binary;
+                steps += `${num} : 2 = ${Math.floor(num / 2)} (ост. ${remainder})\n`;
+                num = Math.floor(num / 2);
+            }
+            
+            if (decimal < 0) binary = '-' + binary;
+            
+            return { binary, steps };
+        }
+        
+        // Функция для преобразования десятичного числа в двоичное (метод степеней)
+        function decimalToBinaryPowers(decimal) {
+            if (decimal === 0) return { binary: '0', steps: '0 = 0' };
+            
+            let steps = '';
+            let num = Math.abs(decimal);
+            let binary = '';
+            const powers = [1024, 512, 256, 128, 64, 32, 16, 8, 4, 2, 1];
+            
+            // Находим максимальную степень двойки, которая меньше или равна числу
+            let startIndex = 0;
+            for (let i = 0; i < powers.length; i++) {
+                if (powers[i] <= num) {
+                    startIndex = i;
+                    break;
+                }
+            }
+            
+            // Вычисляем двоичное представление
+            for (let i = startIndex; i < powers.length; i++) {
+                if (num >= powers[i]) {
+                    binary += '1';
+                    steps += `${num} - ${powers[i]} = ${num - powers[i]}\n`;
+                    num -= powers[i];
+                } else {
+                    binary += '0';
+                }
+            }
+            
+            // Убираем ведущие нули
+            binary = binary.replace(/^0+/, '');
+            if (binary === '') binary = '0';
+            
+            if (decimal < 0) binary = '-' + binary;
+            
+            return { binary, steps };
+        }
+        
+        // Функция для преобразования двоичного числа в десятичное
+        function binaryToDecimal(binary) {
+            // Удаляем возможные пробелы и проверяем, что строка состоит только из 0 и 1
+            const cleanBinary = binary.replace(/\s/g, '');
+            
+            if (!/^[01]+$/.test(cleanBinary)) {
+                throw new Error('Двоичное число должно содержать только цифры 0 и 1');
+            }
+            
+            let decimal = 0;
+            const length = cleanBinary.length;
+            let steps = '';
+            
+            for (let i = 0; i < length; i++) {
+                if (cleanBinary[i] === '1') {
+                    const power = length - 1 - i;
+                    const value = Math.pow(2, power);
+                    decimal += value;
+                    steps += `2^${power} = ${value}\n`;
+                }
+            }
+            
+            if (steps === '') steps = '0 = 0';
+            
+            return { decimal, steps };
+        }
+        
+        // Создание подсказок
+        function createHints() {
+            const hintGrid = document.getElementById('hint-grid');
+            const powers = [1024, 512, 256, 128, 64, 32, 16, 8, 4, 2, 1];
+            
+            powers.forEach(power => {
+                const hintItem = document.createElement('div');
+                hintItem.className = 'hint-item no-select';
+                
+                const hintValue = document.createElement('div');
+                hintValue.className = 'hint-value';
+                hintValue.textContent = power;
+                
+                const hintBinary = document.createElement('div');
+                hintBinary.className = 'hint-binary';
+                hintBinary.textContent = decimalToBinaryDivision(power).binary;
+                
+                hintItem.appendChild(hintValue);
+                hintItem.appendChild(hintBinary);
+                hintGrid.appendChild(hintItem);
+            });
+        }
+        
+        // Обработчики событий
+        document.getElementById('convert-to-binary').addEventListener('click', function() {
+            const decimalInput = document.getElementById('decimal-input').value;
+            const resultElement = document.getElementById('binary-result');
+            const divisionMethodElement = document.getElementById('division-method');
+            const powersMethodElement = document.getElementById('powers-method');
+            
+            if (decimalInput === '') {
+                resultElement.textContent = 'Введите число для конвертации';
+                divisionMethodElement.textContent = 'Процесс деления отобразится здесь';
+                powersMethodElement.textContent = 'Процесс вычисления отобразится здесь';
+                return;
+            }
+            
+            try {
+                const decimal = parseInt(decimalInput, 10);
+                
+                // Метод деления
+                const divisionResult = decimalToBinaryDivision(decimal);
+                resultElement.textContent = `Двоичное: ${divisionResult.binary}`;
+                divisionMethodElement.textContent = divisionResult.steps || '0 = 0';
+                
+                // Метод степеней
+                const powersResult = decimalToBinaryPowers(decimal);
+                powersMethodElement.textContent = powersResult.steps || '0 = 0';
+            } catch (error) {
+                resultElement.textContent = 'Ошибка: введите корректное число';
+                divisionMethodElement.textContent = 'Процесс деления отобразится здесь';
+                powersMethodElement.textContent = 'Процесс вычисления отобразится здесь';
+            }
+        });
+        
+        document.getElementById('convert-to-decimal').addEventListener('click', function() {
+            const binaryInput = document.getElementById('binary-input').value;
+            const resultElement = document.getElementById('decimal-result');
+            const divisionMethodElement = document.getElementById('division-method');
+            const powersMethodElement = document.getElementById('powers-method');
+            
+            if (binaryInput === '') {
+                resultElement.textContent = 'Введите двоичное число для конвертации';
+                divisionMethodElement.textContent = 'Процесс деления отобразится здесь';
+                powersMethodElement.textContent = 'Процесс вычисления отобразится здесь';
+                return;
+            }
+            
+            try {
+                const decimalResult = binaryToDecimal(binaryInput);
+                resultElement.textContent = `Десятичное: ${decimalResult.decimal}`;
+                powersMethodElement.textContent = decimalResult.steps;
+                divisionMethodElement.textContent = 'Для обратного преобразования используйте метод деления';
+            } catch (error) {
+                resultElement.textContent = `Ошибка: ${error.message}`;
+                divisionMethodElement.textContent = 'Процесс деления отобразится здесь';
+                powersMethodElement.textContent = 'Процесс вычисления отобразится здесь';
+            }
+        });
+        
+        // Добавляем обработчики для конвертации по нажатию Enter
+        document.getElementById('decimal-input').addEventListener('keyup', function(event) {
+            if (event.key === 'Enter') {
+                document.getElementById('convert-to-binary').click();
+            }
+        });
+        
+        document.getElementById('binary-input').addEventListener('keyup', function(event) {
+            if (event.key === 'Enter') {
+                document.getElementById('convert-to-decimal').click();
+            }
+        });
+        
+        // Инициализация подсказок при загрузке страницы
+        document.addEventListener('DOMContentLoaded', createHints);
+        
+        // Пример при загрузке страницы
+        window.onload = function() {
+            document.getElementById('decimal-input').value = '57';
+            document.getElementById('convert-to-binary').click();
+        };
+    </script>
+</body>
+</html>
